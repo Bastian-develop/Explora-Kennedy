@@ -132,8 +132,9 @@ const Chatbot = () => {
       )}
 
       {!isOpen && (
-        <button className="chatbot-button" onClick={toggleChat} title="Habla con nuestro asistente">
-          💬 Chat para descubrir curiosidades de Kennedy
+        <button className="chatbot-button" onClick={toggleChat} title="Habla con nuestro asistente" aria-label="Abrir guía virtual">
+          <span className="chatbot-button-label">Chat para descubrir curiosidades de Kennedy</span>
+          <span aria-hidden="true" className="chatbot-button-icon">💬</span>
         </button>
       )}
     </div>
