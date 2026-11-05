@@ -1,0 +1,24 @@
+import type { PointOfInterest } from '../../../types';
+
+export const monumentoBanderas: PointOfInterest = {
+  id: 'p_banderas',
+  name: 'Monumento a las Banderas',
+  description: 'Ubicado en el corazón de la localidad, este monumento representa el panamericanismo y es un símbolo histórico y cultural de Kennedy.',
+  latitude: 4.63139,
+  longitude: -74.14833,
+  media: [
+    { type: 'image', url: '/img/img_banderas/Banderas.png', title: 'Monumento a las Banderas' },
+    { type: 'image', url: '/img/img_banderas/IMG_0248.JPG', title: '' },
+    { type: 'image', url: '/img/img_banderas/IMG_0264.JPG', title: '' },
+    { type: 'image', url: '/img/img_banderas/IMG_0283.JPG', title: '' },
+    { type: 'image', url: '/img/img_banderas/IMG_0300.JPG', title: '' },
+    { type: 'image', url: '/img/img_banderas/IMG_0305.JPG', title: '' },
+    { type: 'image', url: '/img/img_banderas/IMG_0307.JPG', title: '' },
+    { type: 'image', url: '/img/img_banderas/IMG_0309.JPG', title: '' },
+    { type: 'image', url: '/img/img_banderas/IMG_0315.JPG', title: '' },
+    { type: 'image', url: '/img/img_banderas/IMG_0317.JPG', title: '' },
+    { type: 'video', url: 'https://www.youtube.com/embed/tY6hfl7fX_g', title: 'Recorrido en bici' },
+    { type: 'podcast', url: '/img/img_banderas/Capítulo 2_ Madrinas del monumento de Banderas.wav', title: 'Historia banderas' }
+  ],
+  comments: [] // inicial vacío, la app fusiona los guardados
+};
