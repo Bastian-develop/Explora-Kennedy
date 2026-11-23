@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import type { PointOfInterest } from '../../types';
 import CommentSection from '../Comentarios/CommentSection';
+import { getPodcastEmbedUrl, getVideoEmbedUrl, isDirectMediaFile } from '../../lib/mediaUrls';
 import './PointDetailModal.css';
 
 interface PointDetailModalProps {
@@ -15,6 +16,34 @@ const CassettePlayer = ({ podcast }: { podcast: { url: string, title?: string } 
   const [volume, setVolume] = useState(1);
   const audioRef = useRef<HTMLAudioElement>(null);
   const retryCountRef = useRef(0);
+  const podcastEmbedUrl = getPodcastEmbedUrl(podcast.url);
+  const isDirectAudio = isDirectMediaFile(podcast.url, 'audio');
+
+  if (podcastEmbedUrl) {
+    return (
+      <div className="podcast-embed-card">
+        {podcast.title && <h4 className="media-card-title">{podcast.title}</h4>}
+        <iframe
+          src={podcastEmbedUrl}
+          title={podcast.title || 'Reproductor de podcast'}
+          loading="lazy"
+          allow="autoplay; encrypted-media; clipboard-write; picture-in-picture"
+          allowFullScreen
+          style={{ width: '100%', minHeight: '166px', border: 0, borderRadius: '8px' }}
+        />
+      </div>
+    );
+  }
+
+  if (!isDirectAudio) {
+    return (
+      <div className="podcast-embed-card">
+        {podcast.title && <h4 className="media-card-title">{podcast.title}</h4>}
+        <p>No se puede reproducir este enlace dentro de la página.</p>
+        <a href={podcast.url} target="_blank" rel="noreferrer">Abrir podcast en otra pestaña</a>
+      </div>
+    );
+  }
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -333,14 +362,16 @@ const PointDetailModal = ({ point, onClose }: PointDetailModalProps) => {
                         <div key={idx} className="video-card cinema-screen-wrapper">
                           <div className="cinema-stage">
                             <div className="cinema-screen-container">
-                              {vid.url.includes('youtube.com/embed') ? (
+                              {getVideoEmbedUrl(vid.url) ? (
                                 <iframe 
-                                  src={vid.url} 
+                                  src={getVideoEmbedUrl(vid.url)!}
                                   className="cinema-video"
+                                  loading="lazy"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                   allowFullScreen 
                                   title={vid.title}
                                 ></iframe>
-                              ) : (
+                              ) : isDirectMediaFile(vid.url, 'video') ? (
                                 <video 
                                   src={vid.url} 
                                   controls 
@@ -350,6 +381,11 @@ const PointDetailModal = ({ point, onClose }: PointDetailModalProps) => {
                                 >
                                   <p>Tu navegador no soporta video HTML5. Por favor actualiza tu navegador.</p>
                                 </video>
+                              ) : (
+                                <div className="media-link-fallback">
+                                  <p>Este enlace no se puede insertar como reproductor.</p>
+                                  <a href={vid.url} target="_blank" rel="noreferrer">Ver video en otra pestaña</a>
+                                </div>
                               )}
                               <div className="cinema-projector-glow"></div>
                             </div>

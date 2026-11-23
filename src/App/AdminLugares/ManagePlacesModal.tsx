@@ -51,6 +51,27 @@ const ManagePlacesModal = ({ onClose }: ManagePlacesModalProps) => {
     }
   };
 
+  const goToNextEditStep = () => {
+    if (editStep === 1 && (!editName.trim() || !editDescription.trim())) {
+      alert('Por favor completa el nombre y la historia.');
+      return;
+    }
+    if (editStep === 2 && (!Number.isFinite(editLatitude) || !Number.isFinite(editLongitude))) {
+      alert('Ingresa una latitud y longitud válidas antes de continuar.');
+      return;
+    }
+    setEditStep(current => Math.min(current + 1, 3));
+  };
+
+  const goToPreviousEditStep = () => {
+    if (editStep > 1) {
+      setEditStep(current => Math.max(current - 1, 1));
+      return;
+    }
+    setPreviewPoint(null);
+    setEditingPoint(null);
+  };
+
   const startEdit = (point: PointOfInterest) => {
     setEditingPoint(point);
     setEditName(point.name);
@@ -261,28 +282,12 @@ const ManagePlacesModal = ({ onClose }: ManagePlacesModalProps) => {
               )}
 
               <div className="form-navigation-buttons">
-                <button type="button" className="sidebar-btn-map" style={{ background: '#755f46' }} onClick={() => {
-                  if (editStep > 1) {
-                    setEditStep(prev => prev - 1);
-                  } else {
-                    setEditingPoint(null); // Cancelar edición
-                  }
-                }}>
+                <button type="button" className="sidebar-btn-map" style={{ background: '#755f46' }} onClick={goToPreviousEditStep}>
                   {editStep > 1 ? 'Atrás' : 'Cancelar'}
                 </button>
                 
                 {editStep < 3 ? (
-                  <button 
-                    type="button" 
-                    className="sidebar-btn-map" 
-                    onClick={() => {
-                      if (editStep === 1 && (!editName.trim() || !editDescription.trim())) {
-                        alert('Por favor completa el nombre y la historia.');
-                        return;
-                      }
-                      setEditStep(prev => prev + 1)
-                    }}
-                  >
+                  <button type="button" className="sidebar-btn-map" onClick={goToNextEditStep}>
                     Siguiente
                   </button>
                 ) : (
