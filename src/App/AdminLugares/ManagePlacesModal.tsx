@@ -93,8 +93,7 @@ const ManagePlacesModal = ({ onClose }: ManagePlacesModalProps) => {
     event.preventDefault();
     if (!editingPoint) return;
 
-    // Si el navegador envía el formulario con Enter o interpreta el botón
-    // como submit, conserva al usuario en el asistente y avanza el paso.
+    // Nunca guardar/cerrar la edición desde los pasos 1 o 2.
     if (editStep < 3) {
       goToNextEditStep();
       return;
@@ -151,6 +150,15 @@ const ManagePlacesModal = ({ onClose }: ManagePlacesModalProps) => {
     }
   };
 
+  const handleEditFormSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    if (editStep < 3) {
+      goToNextEditStep();
+      return;
+    }
+    void handleSaveEdit(event);
+  };
+
   return (
     <div className={`admin-add-place-overlay ${editingPoint && editStep === 2 ? 'preview-mode' : ''}`} onClick={handleClose}>
       <div className="admin-add-place-modal manage-places-modal" onClick={(e) => e.stopPropagation()}>
@@ -185,7 +193,7 @@ const ManagePlacesModal = ({ onClose }: ManagePlacesModalProps) => {
         ) : (
           <>
             <h3>Editar lugar (Paso {editStep} de 3)</h3>
-            <form className="admin-add-place-form" onSubmit={handleSaveEdit}>
+            <form className="admin-add-place-form" onSubmit={handleEditFormSubmit}>
               {editStep === 1 && (
                 <>
                   <label>
@@ -295,7 +303,11 @@ const ManagePlacesModal = ({ onClose }: ManagePlacesModalProps) => {
                 </button>
                 
                 {editStep < 3 ? (
-                  <button type="button" className="sidebar-btn-map" onClick={goToNextEditStep}>
+                  <button type="button" className="sidebar-btn-map" onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    goToNextEditStep();
+                  }}>
                     Siguiente
                   </button>
                 ) : (
