@@ -92,6 +92,14 @@ const ManagePlacesModal = ({ onClose }: ManagePlacesModalProps) => {
   const handleSaveEdit = async (event: FormEvent) => {
     event.preventDefault();
     if (!editingPoint) return;
+
+    // Si el navegador envía el formulario con Enter o interpreta el botón
+    // como submit, conserva al usuario en el asistente y avanza el paso.
+    if (editStep < 3) {
+      goToNextEditStep();
+      return;
+    }
+
     setIsSaving(true);
 
     try {
